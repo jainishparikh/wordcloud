@@ -1,0 +1,56 @@
+import tweepy
+import pandas as pd
+from scipy.misc import imread
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+
+#authorising twitter account
+consumer_key = '9lMcBOT8L4NIVaZGPjGYd5Hpw'
+consumer_secret = 'n6zdHxzQf9IoZRAoqjplpRvZ66poE7itfw4OhQWCJXBZfzK7Ki'
+access_token = '4866812614-UdFFNvUp1CnV0tAT3WyWSJdlaLLrjiHVJ5y7w0f'
+access_token_secret = 'Wrfm0zbzIIQCH3aCFTiIq38oi8TYcZNgWkaCTWQ7J5M06'
+
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret) #Interacting with twitter's API
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API (auth) #creating the API object
+
+#extracting tweets
+results = []
+for tweet in tweepy.Cursor (api.search, q = 'modi', lang = "en").items(500): 
+    results.append(tweet)
+
+dataset=pd.DataFrame()
+
+dataset["tweet_id"]=pd.Series([tweet.id for tweet in results])
+dataset["username"]=pd.Series([tweet.author.screen_name for tweet in results])
+dataset["text"]=pd.Series([tweet.text for tweet in results])
+dataset["created_at"]=pd.Series([tweet.created_at for tweet in results])
+dataset["location"]=pd.Series([tweet.author.location for tweet in results])
+dataset["followers"]=pd.Series([tweet.author.followers_count for tweet in results])
+dataset["hashtags"]=pd.Series([tweet.entities.get('hashtags') for tweet in results])
+
+
+#WordCloud of hashtags
+
+Hashtag_df = pd.DataFrame(columns=["Hashtag"])
+j = 0
+
+for tweet in range(0,len(results)):
+    hashtag = results[tweet].entities.get('hashtags')
+    for i in range(0,len(hashtag)):
+        Htag = hashtag[i]['text'] 
+        Hashtag_df.at[j,'Hashtag']=Htag
+        j = j+1
+
+ #Join all the text from the 1000 tweets
+Hashtag_Combined = " ".join(Hashtag_df['Hashtag'].values.astype(str))
+text=" ".join(dataset['text'].values.astype(str))
+wc = WordCloud(background_color="white", stopwords=STOPWORDS).generate(Hashtag_Combined)
+plt.imshow(wc)
+plt.axis("off")
+plt.show()
+
+
