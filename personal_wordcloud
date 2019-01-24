@@ -16,7 +16,7 @@ twitter=Twython(consumer_key,consumer_secret,access_token,access_token_secret)
 twitter.verify_credentials()
 
 results=[]
-search=twitter.get_user_timeline(screen_name='isro',count=3000)
+search=twitter.get_user_timeline(screen_name='twitter_handle',count=100)
 
 for data in search:
     results.append(data)
