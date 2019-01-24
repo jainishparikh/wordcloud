@@ -1,0 +1,30 @@
+import pandas as pd
+from scipy.misc import imread
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from twython import Twython
+import re
+
+#authorising twitter account
+consumer_key = '######'
+consumer_secret = '########'
+access_token = '#######'
+access_token_secret = '######'
+
+twitter=Twython(consumer_key,consumer_secret,access_token,access_token_secret)
+twitter.verify_credentials()
+
+results=[]
+search=twitter.get_user_timeline(screen_name='isro',count=3000)
+
+for data in search:
+    results.append(data)
+ 
+dataset=pd.DataFrame()
+dataset["hashtags"]=pd.Series(["".join(re.findall("[#]\w+",tweet["text"])) for tweet in results])
+hashtags=" ".join(dataset['hashtags'].values.astype(str))
+wc = WordCloud(background_color="white", stopwords=STOPWORDS).generate(hashtags)
+plt.imshow(wc)
+plt.axis("off")
+plt.show()     
