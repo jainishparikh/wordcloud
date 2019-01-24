@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 
 
 #authorising twitter account
-consumer_key = '9lMcBOT8L4NIVaZGPjGYd5Hpw'
-consumer_secret = 'n6zdHxzQf9IoZRAoqjplpRvZ66poE7itfw4OhQWCJXBZfzK7Ki'
-access_token = '4866812614-UdFFNvUp1CnV0tAT3WyWSJdlaLLrjiHVJ5y7w0f'
-access_token_secret = 'Wrfm0zbzIIQCH3aCFTiIq38oi8TYcZNgWkaCTWQ7J5M06'
+consumer_key = '########'
+consumer_secret = '##################'
+access_token = '############'
+access_token_secret = '###############'
 
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret) #Interacting with twitter's API
